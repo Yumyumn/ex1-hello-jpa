@@ -13,6 +13,15 @@ public class Member {
         return id;
     }
 
+    // JPA는 내부적으로 reflection을 사용하기 때문에 동적으로 객체를 생성해야 한다 -> 기본 생성자가 있어야
+    public Member() {
+    }
+
+    public Member(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

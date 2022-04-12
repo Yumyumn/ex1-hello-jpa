@@ -44,15 +44,30 @@ public class JpaMain {
             // JPA는 절대 테이블을 대상으로 쿼리를 만들지 않는다. 멤버 객체를 대상으로 한 쿼리문이다.
 //            List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
             // 만약 페이징을 하고 싶다면
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(0) // 1번부터（０이첫번째） 10개 가져와! 라는 뜻
-                    .setMaxResults(10)
-                    .getResultList();
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
+//            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+//                    .setFirstResult(0) // 1번부터（０이첫번째） 10개 가져와! 라는 뜻
+//                    .setMaxResults(10)
+//                    .getResultList();
+//            for (Member member : result) {
+//                System.out.println("member.name = " + member.getName());
+//            }
+
+            // 영속성 컨텍스트2
+            // 영속
+            Member member1 = new Member(150L, "A");
+            Member member2 = new Member(160L, "B");
+
+            // 영속성 컨텍스트 내부의 쓰기 지연 SQL저장소에 insert문 하나가 쌓인다
+            em.persist(member1);
+            // insert문 두개가 쌓인다
+            em.persist(member2);
+
             // transaction을 commit하는 시점에 영속성 컨텍스트에 있는 애가 DB에 쿼리가 날라가게 된다.
+            // 1.
             tx.commit();
+            // 2. 쓰기 지연 저장소 내용 flush
+            // 3. DB commit
+
         }catch (Exception e){
             tx.rollback();
         }finally {
